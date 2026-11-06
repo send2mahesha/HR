@@ -1,0 +1,1170 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>HR Roulette: Off The Record - The Ultimate HR Icebreaker</title>
+  <!-- Tailwind CSS -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <!-- Canvas Confetti -->
+  <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+  <!-- FontAwesome Icons -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <!-- Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+
+  <script>
+    tailwind.config = {
+      darkMode: 'class',
+      theme: {
+        extend: {
+          fontFamily: {
+            sans: ['"Plus Jakarta Sans"', 'sans-serif'],
+          },
+          colors: {
+            brand: {
+              50: '#eef2ff',
+              100: '#e0e7ff',
+              500: '#6366f1',
+              600: '#4f46e5',
+              700: '#4338ca',
+            },
+            cat: {
+              interview: '#a855f7', // Purple
+              lingo: '#f59e0b',     // Amber
+              culture: '#10b981',   // Emerald
+              drama: '#f43f5e',     // Rose
+              survival: '#06b6d4',  // Cyan
+            }
+          },
+          animation: {
+            'glow-pulse': 'glowPulse 2.5s infinite ease-in-out',
+            'float': 'float 3s ease-in-out infinite',
+          },
+          keyframes: {
+            glowPulse: {
+              '0%, 100%': { opacity: '0.4' },
+              '50%': { opacity: '0.85' }
+            },
+            float: {
+              '0%, 100%': { transform: 'translateY(0px)' },
+              '50%': { transform: 'translateY(-5px)' }
+            }
+          }
+        }
+      }
+    }
+  </script>
+
+  <style>
+    /* Glassmorphism styling */
+    .glass-panel {
+      background: rgba(15, 23, 42, 0.75);
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+    }
+    .glass-card {
+      background: rgba(30, 41, 59, 0.65);
+      backdrop-filter: blur(12px);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+    }
+    .neon-border {
+      box-shadow: 0 0 25px -5px rgba(99, 102, 241, 0.35);
+    }
+    .custom-scroll::-webkit-scrollbar {
+      width: 5px;
+    }
+    .custom-scroll::-webkit-scrollbar-track {
+      background: rgba(15, 23, 42, 0.6);
+    }
+    .custom-scroll::-webkit-scrollbar-thumb {
+      background: rgba(99, 102, 241, 0.4);
+      border-radius: 9999px;
+    }
+    .custom-scroll::-webkit-scrollbar-thumb:hover {
+      background: rgba(99, 102, 241, 0.8);
+    }
+  </style>
+</head>
+<body class="bg-slate-950 text-slate-100 min-h-screen font-sans flex flex-col selection:bg-brand-500 selection:text-white overflow-x-hidden">
+
+  <!-- Ambient glowing backdrop lighting -->
+  <div class="fixed inset-0 overflow-hidden pointer-events-none z-0">
+    <div class="absolute -top-40 -left-40 w-[30rem] h-[30rem] bg-indigo-600/15 rounded-full blur-[120px] animate-glow-pulse"></div>
+    <div class="absolute top-1/2 -right-40 w-[28rem] h-[28rem] bg-amber-500/10 rounded-full blur-[130px]"></div>
+    <div class="absolute -bottom-40 left-1/3 w-[32rem] h-[32rem] bg-rose-500/10 rounded-full blur-[140px]"></div>
+  </div>
+
+  <!-- Header Navigation -->
+  <header class="relative z-20 border-b border-slate-800/80 bg-slate-900/70 backdrop-blur-md px-4 py-3 sm:px-6 sticky top-0">
+    <div class="max-w-7xl mx-auto flex items-center justify-between gap-3">
+      <!-- Title & Branding -->
+      <div class="flex items-center gap-3">
+        <div class="w-11 h-11 rounded-2xl bg-gradient-to-tr from-brand-600 via-purple-600 to-amber-500 flex items-center justify-center shadow-lg shadow-brand-500/25 border border-white/10">
+          <i class="fa-solid fa-stamp text-white text-lg"></i>
+        </div>
+        <div>
+          <div class="flex items-center gap-2">
+            <h1 class="font-black text-xl sm:text-2xl tracking-tight bg-gradient-to-r from-indigo-200 via-amber-200 to-rose-200 bg-clip-text text-transparent">
+              HR Roulette
+            </h1>
+            <span class="text-[10px] font-black uppercase tracking-wider bg-rose-500/20 text-rose-300 border border-rose-500/30 px-2 py-0.5 rounded-full">
+              Off The Record 🤫
+            </span>
+          </div>
+          <p class="text-xs text-slate-400 hidden sm:block">No names, no incident reports — just unvarnished HR truths</p>
+        </div>
+      </div>
+
+      <!-- Quick Controls -->
+      <div class="flex items-center gap-2 sm:gap-3">
+        <!-- Progress Counter -->
+        <div class="hidden sm:flex items-center gap-2 px-3 py-1.5 rounded-xl bg-slate-800/80 border border-slate-700/60 text-xs font-semibold">
+          <i class="fa-solid fa-list-check text-cat-culture"></i>
+          <span class="text-slate-400">Answered:</span>
+          <span id="answeredCounter" class="text-white font-bold">0 / 25</span>
+        </div>
+
+        <!-- Wheel Mode Selector -->
+        <div class="flex items-center rounded-xl bg-slate-800/90 border border-slate-700/80 p-0.5 text-xs font-bold">
+          <button id="modeCategoriesBtn" onclick="setWheelMode('categories')" class="px-3 py-1.5 rounded-lg bg-brand-600 text-white transition-all shadow-sm">
+            Categories (5)
+          </button>
+          <button id="modeQuestionsBtn" onclick="setWheelMode('questions')" class="px-3 py-1.5 rounded-lg text-slate-400 hover:text-white transition-all">
+            Active Qs (<span id="activeWedgesCount">25</span>)
+          </button>
+        </div>
+
+        <!-- Sound FX Button -->
+        <button id="soundToggleBtn" onclick="toggleSound()" class="w-9 h-9 rounded-xl bg-slate-800 hover:bg-slate-700 border border-slate-700 text-slate-300 hover:text-white flex items-center justify-center transition-all" title="Toggle Sound FX">
+          <i id="soundIcon" class="fa-solid fa-volume-high"></i>
+        </button>
+
+        <!-- Fullscreen Button -->
+        <button onclick="toggleFullscreen()" class="w-9 h-9 rounded-xl bg-slate-800 hover:bg-slate-700 border border-slate-700 text-slate-300 hover:text-white flex items-center justify-center transition-all" title="Toggle Fullscreen (Present Mode)">
+          <i class="fa-solid fa-expand"></i>
+        </button>
+
+        <!-- Questions Drawer Toggle -->
+        <button onclick="toggleDrawer()" class="px-3 py-2 rounded-xl bg-slate-800 hover:bg-slate-700 border border-slate-700 text-slate-200 text-xs font-bold flex items-center gap-1.5 transition-all">
+          <i class="fa-solid fa-folder-open text-amber-400"></i>
+          <span class="hidden md:inline">Questions (25)</span>
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <!-- Main Game Stage -->
+  <main class="relative z-10 flex-1 max-w-7xl w-full mx-auto p-4 sm:p-6 lg:p-8 flex flex-col items-center justify-center">
+
+    <!-- Wheel & Stage Layout -->
+    <div class="w-full flex flex-col lg:flex-row items-center justify-center gap-8 lg:gap-14">
+
+      <!-- Left / Center: Wheel Container -->
+      <div class="flex flex-col items-center">
+        <!-- Interactive Wheel Wrapper -->
+        <div class="relative w-[340px] h-[340px] sm:w-[440px] sm:h-[440px] md:w-[480px] md:h-[480px] flex items-center justify-center select-none">
+          
+          <!-- Outer Neon Halo -->
+          <div class="absolute inset-0 rounded-full border-4 border-indigo-500/20 shadow-[0_0_60px_-15px_rgba(99,102,241,0.5)] pointer-events-none"></div>
+
+          <!-- Wheel Top Pointer Peg -->
+          <div class="absolute -top-4 left-1/2 -translate-x-1/2 z-30 pointer-events-none filter drop-shadow-[0_4px_12px_rgba(0,0,0,0.8)]">
+            <div class="w-0 h-0 border-l-[18px] border-l-transparent border-r-[18px] border-r-transparent border-t-[34px] border-t-amber-400 relative">
+              <div class="absolute -top-[34px] -left-2 w-4 h-4 bg-amber-300 rounded-full blur-[3px]"></div>
+            </div>
+          </div>
+
+          <!-- HTML5 Wheel Canvas -->
+          <canvas id="wheelCanvas" width="480" height="480" class="w-full h-full rounded-full border-8 border-slate-900 bg-slate-950 shadow-2xl cursor-pointer" onclick="spinWheel()"></canvas>
+
+          <!-- Center Glowing Spin Button -->
+          <button id="centerSpinBtn" onclick="spinWheel()" class="absolute z-20 w-20 h-20 sm:w-24 sm:h-24 rounded-full bg-gradient-to-tr from-indigo-700 via-indigo-600 to-amber-500 text-white font-black text-sm sm:text-base tracking-widest uppercase flex flex-col items-center justify-center shadow-[0_0_30px_rgba(99,102,241,0.6)] border-4 border-slate-950 hover:scale-105 active:scale-95 transition-transform duration-200">
+            <i class="fa-solid fa-play text-xs sm:text-sm mb-0.5"></i>
+            <span>SPIN</span>
+          </button>
+        </div>
+
+        <!-- Wheel Bottom Quick Info -->
+        <div class="mt-5 text-center flex items-center gap-3">
+          <button onclick="spinWheel()" class="px-6 py-2.5 rounded-xl bg-gradient-to-r from-brand-600 via-indigo-600 to-amber-500 hover:from-brand-500 hover:to-amber-400 font-extrabold text-sm shadow-lg shadow-indigo-600/30 active:scale-95 transition-all flex items-center gap-2">
+            <i class="fa-solid fa-rotate text-xs"></i>
+            <span>Spin the Roulette</span>
+          </button>
+          <button onclick="randomPromptInstant()" class="px-4 py-2.5 rounded-xl bg-slate-800 hover:bg-slate-700 border border-slate-700 text-slate-300 hover:text-white font-bold text-xs transition-all flex items-center gap-1.5" title="Quick pick without spinning animation">
+            <i class="fa-solid fa-bolt text-amber-400"></i>
+            <span>Quick Pick</span>
+          </button>
+        </div>
+      </div>
+
+      <!-- Right Column: Interactive Live Prompt Display / Status Card -->
+      <div class="w-full lg:max-w-md flex flex-col gap-4">
+        
+        <!-- Active Category Legend Pills -->
+        <div class="glass-panel p-4 rounded-2xl border border-slate-800">
+          <h3 class="text-xs font-bold uppercase tracking-wider text-slate-400 mb-2.5 flex items-center justify-between">
+            <span>5 Off-The-Record Categories</span>
+            <span class="text-[10px] text-indigo-400 font-medium">5 Questions Each</span>
+          </h3>
+          <div class="flex flex-wrap gap-2 text-[11px] font-semibold">
+            <span class="px-2.5 py-1 rounded-lg bg-cat-interview/20 text-purple-300 border border-cat-interview/30 flex items-center gap-1.5">
+              <span class="w-2 h-2 rounded-full bg-cat-interview"></span> Interview Confessions
+            </span>
+            <span class="px-2.5 py-1 rounded-lg bg-cat-lingo/20 text-amber-300 border border-cat-lingo/30 flex items-center gap-1.5">
+              <span class="w-2 h-2 rounded-full bg-cat-lingo"></span> Corporate Lingo &amp; Bureaucracy
+            </span>
+            <span class="px-2.5 py-1 rounded-lg bg-cat-culture/20 text-emerald-300 border border-cat-culture/30 flex items-center gap-1.5">
+              <span class="w-2 h-2 rounded-full bg-cat-culture"></span> Workplace Perks &amp; Culture
+            </span>
+            <span class="px-2.5 py-1 rounded-lg bg-cat-drama/20 text-rose-300 border border-cat-drama/30 flex items-center gap-1.5">
+              <span class="w-2 h-2 rounded-full bg-cat-drama"></span> Exit Interviews &amp; Office Drama
+            </span>
+            <span class="px-2.5 py-1 rounded-lg bg-cat-survival/20 text-cyan-300 border border-cat-survival/30 flex items-center gap-1.5">
+              <span class="w-2 h-2 rounded-full bg-cat-survival"></span> The HR Survival Test
+            </span>
+          </div>
+        </div>
+
+        <!-- Latest Spin Result Live Card -->
+        <div id="liveResultCard" class="glass-card p-6 rounded-2xl border border-slate-800 relative overflow-hidden transition-all duration-300">
+          <div class="flex items-center justify-between mb-3">
+            <span id="liveCategoryBadge" class="px-3 py-1 rounded-full text-xs font-black uppercase tracking-wider bg-cat-interview/20 text-purple-300 border border-cat-interview/40">
+              Ready to Spin
+            </span>
+            <span id="liveQuestionNumber" class="text-xs font-mono font-bold text-slate-500">
+              HR-PROMPT #--
+            </span>
+          </div>
+
+          <p id="liveQuestionText" class="text-lg sm:text-xl font-bold text-slate-100 leading-snug mb-4">
+            "Hit SPIN to summon a confidential HR conversation starter!"
+          </p>
+
+          <!-- Humorous Facilitator Tip -->
+          <div id="facilitatorTipBox" class="p-3.5 rounded-xl bg-slate-900/80 border border-slate-800 text-xs text-slate-300 italic mb-5 flex items-start gap-2.5">
+            <i class="fa-solid fa-masks-theater text-amber-400 mt-0.5"></i>
+            <div>
+              <span class="font-bold text-amber-400 not-italic">HR Facilitator Rule: </span>
+              <span id="facilitatorTipText">All answers shared in this call are protected under executive meeting immunity. What happens in the breakout room stays in the breakout room!</span>
+            </div>
+          </div>
+
+          <!-- 60-Second Speaker Spotlight Timer Bar -->
+          <div class="pt-3 border-t border-slate-800/80">
+            <div class="flex items-center justify-between text-xs font-semibold text-slate-400 mb-2">
+              <div class="flex items-center gap-1.5">
+                <i class="fa-solid fa-microphone-lines text-cat-culture animate-pulse"></i>
+                <span>Speaker Spotlight Timer</span>
+              </div>
+              <span id="spotlightTimerDisplay" class="font-mono text-base font-bold text-white">60s</span>
+            </div>
+            
+            <div class="w-full bg-slate-800 h-2 rounded-full overflow-hidden border border-slate-700/60 mb-3">
+              <div id="spotlightProgressBar" class="h-full bg-cat-culture w-full transition-all duration-1000 ease-linear"></div>
+            </div>
+
+            <!-- Spotlight Timer Controls -->
+            <div class="flex items-center gap-2">
+              <button onclick="startSpotlightTimer()" class="flex-1 py-1.5 rounded-lg bg-slate-800 hover:bg-slate-700 border border-slate-700 text-xs font-bold text-slate-200 transition-all">
+                <i class="fa-solid fa-play text-[10px] mr-1"></i> Start
+              </button>
+              <button onclick="pauseSpotlightTimer()" class="flex-1 py-1.5 rounded-lg bg-slate-800 hover:bg-slate-700 border border-slate-700 text-xs font-bold text-slate-200 transition-all">
+                <i class="fa-solid fa-pause text-[10px] mr-1"></i> Pause
+              </button>
+              <button onclick="resetSpotlightTimer(60)" class="flex-1 py-1.5 rounded-lg bg-slate-800 hover:bg-slate-700 border border-slate-700 text-xs font-bold text-slate-200 transition-all">
+                <i class="fa-solid fa-rotate-left text-[10px] mr-1"></i> 60s
+              </button>
+              <button onclick="resetSpotlightTimer(30)" class="py-1.5 px-2.5 rounded-lg bg-slate-800 hover:bg-slate-700 border border-slate-700 text-xs font-bold text-slate-200 transition-all" title="Fast 30s Rapid Round">
+                30s
+              </button>
+            </div>
+          </div>
+
+          <!-- Bottom Prompt Actions -->
+          <div class="flex items-center justify-between gap-2 mt-4 pt-3 border-t border-slate-800/80">
+            <button id="markAnsweredBtn" onclick="toggleCurrentQuestionAnswered()" class="px-3 py-1.5 rounded-lg bg-slate-800 hover:bg-emerald-950 border border-slate-700 hover:border-emerald-600 text-xs font-bold text-slate-300 hover:text-emerald-300 transition-all flex items-center gap-1.5">
+              <i class="fa-solid fa-check"></i>
+              <span>Mark as Answered</span>
+            </button>
+            <button onclick="passHotSeat()" class="px-3 py-1.5 rounded-lg bg-slate-800 hover:bg-rose-950 border border-slate-700 hover:border-rose-600 text-xs font-bold text-slate-300 hover:text-rose-300 transition-all flex items-center gap-1.5" title="Pass hot seat to another teammate">
+              <i class="fa-solid fa-fire text-rose-400"></i>
+              <span>Pass Hot Seat</span>
+            </button>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </main>
+
+  <!-- ============================================== -->
+  <!-- MODAL: BIG SCREEN REVEAL CELEBRATION -->
+  <!-- ============================================== -->
+  <div id="revealModal" class="fixed inset-0 z-50 hidden bg-slate-950/85 backdrop-blur-xl flex items-center justify-center p-4">
+    <div class="glass-panel bg-slate-900 border-2 border-indigo-500/50 w-full max-w-2xl rounded-3xl p-6 sm:p-8 shadow-2xl relative text-center transform scale-95 transition-all">
+      <button onclick="closeRevealModal()" class="absolute top-5 right-5 text-slate-400 hover:text-white p-2 text-lg">
+        <i class="fa-solid fa-xmark"></i>
+      </button>
+
+      <!-- Badge -->
+      <div class="inline-flex items-center gap-2 mb-4">
+        <span id="modalCategoryBadge" class="px-3.5 py-1 rounded-full text-xs font-black uppercase tracking-wider bg-cat-interview text-white shadow-lg">
+          Category
+        </span>
+        <span id="modalQuestionNumber" class="text-xs font-mono font-bold text-slate-400">
+          #1
+        </span>
+      </div>
+
+      <!-- Question Text -->
+      <h2 id="modalQuestionText" class="text-xl sm:text-3xl font-extrabold text-white leading-snug mb-6">
+        "Question text here..."
+      </h2>
+
+      <!-- Humorous Facilitator Tip in Modal -->
+      <div class="p-4 rounded-2xl bg-slate-800/90 border border-slate-700 text-sm text-slate-300 italic mb-6 text-left flex items-start gap-3">
+        <i class="fa-solid fa-lightbulb text-amber-400 mt-1 text-base"></i>
+        <div>
+          <span class="font-bold text-amber-400 not-italic">Host Follow-Up: </span>
+          <span id="modalTipText">Insight text</span>
+        </div>
+      </div>
+
+      <!-- Modal Spotlight Controls -->
+      <div class="flex items-center justify-center gap-3">
+        <button onclick="closeRevealModal(); startSpotlightTimer();" class="px-6 py-3 rounded-xl bg-gradient-to-r from-emerald-600 to-teal-500 hover:from-emerald-500 hover:to-teal-400 text-white font-extrabold text-sm shadow-lg shadow-emerald-500/25 transition-all flex items-center gap-2">
+          <i class="fa-solid fa-stopwatch"></i>
+          <span>Start Spotlight Timer (60s)</span>
+        </button>
+        <button onclick="closeRevealModal()" class="px-5 py-3 rounded-xl bg-slate-800 hover:bg-slate-700 border border-slate-700 text-slate-200 font-bold text-sm transition-all">
+          Back to Wheel
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ============================================== -->
+  <!-- DRAWER: ALL 25 QUESTIONS CHECKLIST & CUSTOM INPUT -->
+  <!-- ============================================== -->
+  <div id="drawerBackdrop" onclick="toggleDrawer()" class="fixed inset-0 z-40 bg-slate-950/70 backdrop-blur-sm hidden transition-opacity"></div>
+
+  <aside id="questionsDrawer" class="fixed top-0 right-0 bottom-0 z-50 w-full max-w-md bg-slate-900 border-l border-slate-800 shadow-2xl flex flex-col transform translate-x-full transition-transform duration-300 ease-in-out">
+    <!-- Drawer Header -->
+    <div class="p-5 border-b border-slate-800 flex items-center justify-between">
+      <div class="flex items-center gap-2.5">
+        <div class="w-8 h-8 rounded-lg bg-amber-500/20 text-amber-400 border border-amber-500/30 flex items-center justify-center font-bold text-sm">
+          <i class="fa-solid fa-list-ul"></i>
+        </div>
+        <div>
+          <h3 class="font-extrabold text-base text-white">HR Question Deck</h3>
+          <p class="text-xs text-slate-400">Click any card to load or mark answered</p>
+        </div>
+      </div>
+      <button onclick="toggleDrawer()" class="text-slate-400 hover:text-white p-2">
+        <i class="fa-solid fa-xmark text-lg"></i>
+      </button>
+    </div>
+
+    <!-- Add Custom HR Question Form -->
+    <div class="p-4 border-b border-slate-800/80 bg-slate-950/40">
+      <form onsubmit="handleCustomQuestionAdd(event)" class="space-y-2">
+        <div class="flex gap-2">
+          <select id="customCatSelect" class="bg-slate-800 border border-slate-700 rounded-lg text-xs px-2.5 py-1.5 text-slate-200 focus:outline-none focus:border-indigo-500 flex-1">
+            <option value="interview">Interview Confessions</option>
+            <option value="lingo">Corporate Lingo</option>
+            <option value="culture">Perks &amp; Culture</option>
+            <option value="drama">Exit Interviews &amp; Drama</option>
+            <option value="survival">HR Survival Test</option>
+          </select>
+          <button type="submit" class="px-3 py-1.5 rounded-lg bg-brand-600 hover:bg-brand-500 text-white font-bold text-xs transition-all flex items-center gap-1">
+            <i class="fa-solid fa-plus"></i> Add
+          </button>
+        </div>
+        <input type="text" id="customQuestionInput" required placeholder="Type an insider question/joke..." class="w-full bg-slate-800/90 border border-slate-700 rounded-lg px-3 py-1.5 text-xs text-white placeholder-slate-500 focus:outline-none focus:border-brand-500">
+      </form>
+    </div>
+
+    <!-- Questions Scrollable List -->
+    <div id="drawerListContainer" class="flex-1 overflow-y-auto p-4 space-y-2.5 custom-scroll">
+      <!-- Injected by JavaScript -->
+    </div>
+
+    <!-- Drawer Footer Actions -->
+    <div class="p-4 border-t border-slate-800 bg-slate-900 flex items-center justify-between text-xs">
+      <button onclick="resetAllAnswered()" class="text-rose-400 hover:text-rose-300 font-bold flex items-center gap-1">
+        <i class="fa-solid fa-rotate-left"></i> Reset All 25 to Unanswered
+      </button>
+      <span class="text-slate-500">25 Base Questions</span>
+    </div>
+  </aside>
+
+  <!-- Notification Toast -->
+  <div id="appToast" class="fixed bottom-6 right-6 z-50 transform translate-y-20 opacity-0 transition-all duration-300 glass-panel bg-slate-900 border border-brand-500/50 text-white px-4 py-3 rounded-xl shadow-2xl flex items-center gap-3 text-xs font-bold">
+    <i id="toastIcon" class="fa-solid fa-circle-check text-cat-culture text-base"></i>
+    <span id="toastMsg">Notification message</span>
+  </div>
+
+  <!-- Audio Engine & Game Script -->
+  <script>
+    /* =================================================================
+       1. SYNTHETIC WEB AUDIO ENGINE
+       ================================================================= */
+    let audioCtx = null;
+    let isSoundMuted = false;
+
+    function initAudio() {
+      if (!audioCtx) {
+        const AudioContext = window.AudioContext || window.webkitAudioContext;
+        audioCtx = new AudioContext();
+      }
+      if (audioCtx.state === 'suspended') {
+        audioCtx.resume();
+      }
+    }
+
+    function playTone(freq, type, duration, delay = 0, gainLevel = 0.12) {
+      if (isSoundMuted) return;
+      initAudio();
+      setTimeout(() => {
+        try {
+          const osc = audioCtx.createOscillator();
+          const gain = audioCtx.createGain();
+          osc.type = type;
+          osc.frequency.setValueAtTime(freq, audioCtx.currentTime);
+          gain.gain.setValueAtTime(gainLevel, audioCtx.currentTime);
+          gain.gain.exponentialRampToValueAtTime(0.0001, audioCtx.currentTime + duration);
+          osc.connect(gain);
+          gain.connect(audioCtx.destination);
+          osc.start();
+          osc.stop(audioCtx.currentTime + duration);
+        } catch (e) {}
+      }, delay * 1000);
+    }
+
+    const SoundFX = {
+      click: () => playTone(540, 'triangle', 0.04, 0, 0.08),
+      pegTick: () => playTone(820 + Math.random() * 80, 'sine', 0.025, 0, 0.05),
+      fanfare: () => {
+        playTone(523.25, 'triangle', 0.2, 0, 0.15); // C5
+        playTone(659.25, 'triangle', 0.2, 0.1, 0.15); // E5
+        playTone(783.99, 'triangle', 0.25, 0.2, 0.18); // G5
+        playTone(1046.50, 'triangle', 0.5, 0.32, 0.2); // C6
+      },
+      timerBeep: () => playTone(660, 'sawtooth', 0.05, 0, 0.07),
+      timerFinish: () => {
+        playTone(880, 'triangle', 0.2, 0, 0.15);
+        playTone(880, 'triangle', 0.4, 0.25, 0.18);
+      }
+    };
+
+    function toggleSound() {
+      isSoundMuted = !isSoundMuted;
+      const icon = document.getElementById('soundIcon');
+      if (isSoundMuted) {
+        icon.className = 'fa-solid fa-volume-xmark text-rose-400';
+        showToast('Sound Muted', 'fa-volume-xmark', 'text-rose-400');
+      } else {
+        icon.className = 'fa-solid fa-volume-high text-brand-500';
+        initAudio();
+        SoundFX.click();
+        showToast('Sound Enabled', 'fa-volume-high', 'text-brand-400');
+      }
+    }
+
+    /* =================================================================
+       2. THE 25 HR HUMOROUS QUESTIONS DATASET
+       ================================================================= */
+    const CATEGORIES = {
+      interview: {
+        id: 'interview',
+        title: 'Interview Confessions',
+        color: '#a855f7', // Purple
+        badgeBg: 'bg-purple-500/20',
+        badgeBorder: 'border-purple-500/40',
+        badgeText: 'text-purple-300'
+      },
+      lingo: {
+        id: 'lingo',
+        title: 'Corporate Lingo & Bureaucracy',
+        color: '#f59e0b', // Amber
+        badgeBg: 'bg-amber-500/20',
+        badgeBorder: 'border-amber-500/40',
+        badgeText: 'text-amber-300'
+      },
+      culture: {
+        id: 'culture',
+        title: 'Workplace Perks & Culture',
+        color: '#10b981', // Emerald
+        badgeBg: 'bg-emerald-500/20',
+        badgeBorder: 'border-emerald-500/40',
+        badgeText: 'text-emerald-300'
+      },
+      drama: {
+        id: 'drama',
+        title: 'Exit Interviews & Drama',
+        color: '#f43f5e', // Rose
+        badgeBg: 'bg-rose-500/20',
+        badgeBorder: 'border-rose-500/40',
+        badgeText: 'text-rose-300'
+      },
+      survival: {
+        id: 'survival',
+        title: 'The HR Survival Test',
+        color: '#06b6d4', // Cyan
+        badgeBg: 'bg-cyan-500/20',
+        badgeBorder: 'border-cyan-500/40',
+        badgeText: 'text-cyan-300'
+      }
+    };
+
+    const initialHRQuestions = [
+      // 1. The Interview Confessions
+      {
+        id: 1,
+        cat: 'interview',
+        question: "What is the most unhinged or creative excuse someone gave you for arriving late (or missing) an interview?",
+        tip: "Ask if they gave them a second chance, or if the excuse was too wild to pass up!",
+        answered: false
+      },
+      {
+        id: 2,
+        cat: 'interview',
+        question: "If you were legally required to answer “What is your greatest weakness?” with 100% brutal honesty, what would you say?",
+        tip: "No fake answers like 'I work too hard' or 'I care too much' allowed!",
+        answered: false
+      },
+      {
+        id: 3,
+        cat: 'interview',
+        question: "What is one resume buzzword or phrase that should result in immediate disqualification from the corporate world?",
+        tip: "Examples: 'Synergy architect', 'Disruptive rockstar', 'Ninja developer'.",
+        answered: false
+      },
+      {
+        id: 4,
+        cat: 'interview',
+        question: "If an applicant brought their mother or partner to an interview, what job role would actually make that acceptable?",
+        tip: "Family business? Co-pilots? Test the team's comedic imagination.",
+        answered: false
+      },
+      {
+        id: 5,
+        cat: 'interview',
+        question: "What is the wildest 'skills' section exaggeration you have ever caught on a CV in real life?",
+        tip: "Did someone list 'Proficient in Python' because they own a snake?",
+        answered: false
+      },
+
+      // 2. Corporate Lingo & Bureaucracy
+      {
+        id: 6,
+        cat: 'lingo',
+        question: "Translate your current mood right now entirely into corporate jargon (e.g., 'Operating at negative bandwidth').",
+        tip: "Give them 5 seconds to deliver their best bureaucratic sentence.",
+        answered: false
+      },
+      {
+        id: 7,
+        cat: 'lingo',
+        question: "If 'Per my last email' was punishable by law, what should the penalty be?",
+        tip: "A 10-minute timeout from keyboards, or mandatory handwritten memos?",
+        answered: false
+      },
+      {
+        id: 8,
+        cat: 'lingo',
+        question: "What corporate euphemism drives you the craziest: 'Fast-paced environment,' 'Wear many hats,' or 'We are like a family'?",
+        tip: "Take a quick team poll on which one is the biggest workplace red flag.",
+        answered: false
+      },
+      {
+        id: 9,
+        cat: 'lingo',
+        question: "If you had the power to permanently delete one recurring workplace meeting from existence forever, which one dies today?",
+        tip: "Is it the Monday morning standup or the 4 PM Friday sync?",
+        answered: false
+      },
+      {
+        id: 10,
+        cat: 'lingo',
+        question: "If HR had its own warning label printed on a t-shirt, what would yours say?",
+        tip: "'Careful: Anything you say can and will be put into an onboarding deck.'",
+        answered: false
+      },
+
+      // 3. Workplace Perks & Culture
+      {
+        id: 11,
+        cat: 'culture',
+        question: "Rank in order of emotional utility: An extra vacation day, free gourmet lunch, or nobody scheduling a meeting after 3 PM on Fridays.",
+        tip: "Notice how fast everyone picks no Friday meetings after 3 PM!",
+        answered: false
+      },
+      {
+        id: 12,
+        cat: 'culture',
+        question: "If a company pizza party were a prescription medicine, what side effects would be listed on the back of the box?",
+        tip: "'May cause temporary illusion of team cohesion and a 2 PM energy crash.'",
+        answered: false
+      },
+      {
+        id: 13,
+        cat: 'culture',
+        question: "What is the most useless 'employee wellness perk' you have ever seen a company propose with a straight face?",
+        tip: "Nap pods nobody ever used? Meditation apps instead of raises?",
+        answered: false
+      },
+      {
+        id: 14,
+        cat: 'culture',
+        question: "If you could replace the office ping-pong table or beanbags with literally anything else, what are you buying?",
+        tip: "Espresso bars, massage chairs, or soundproof screaming booths?",
+        answered: false
+      },
+      {
+        id: 15,
+        cat: 'culture',
+        question: "What is the unwritten law of the office microwave, and who was the worst offender you’ve dealt with?",
+        tip: "Rule #1: Reheating seafood on a Tuesday is grounds for disciplinary review.",
+        answered: false
+      },
+
+      // 4. Exit Interviews & Office Drama
+      {
+        id: 16,
+        cat: 'drama',
+        question: "Without naming names, what is the most dramatic reason an employee cited during an exit interview?",
+        tip: "Remind everyone: Names have been changed to protect the innocent!",
+        answered: false
+      },
+      {
+        id: 17,
+        cat: 'drama',
+        question: "If an employee quit by sending an interpretive dance or a meme instead of a formal resignation letter, would you accept it?",
+        tip: "Would you counter-offer with an even spicier meme?",
+        answered: false
+      },
+      {
+        id: 18,
+        cat: 'drama',
+        question: "What is a workplace dispute that sounded so ridiculous you felt like a kindergarten teacher instead of an HR professional?",
+        tip: "Stolen label makers, milk carton politics, or thermostat wars?",
+        answered: false
+      },
+      {
+        id: 19,
+        cat: 'drama',
+        question: "What is the single most awkward thing you have accidentally overheard or seen on an unmuted Zoom call?",
+        tip: "Dog barking at postal workers, spouses walking by in pajamas, or accidental sighs?",
+        answered: false
+      },
+      {
+        id: 20,
+        cat: 'drama',
+        question: "If you wrote a tell-all memoir about your HR career, what would the dramatic title and subtitle be?",
+        tip: "Example: 'Document Everything: How I Survived 10 Years of Reorgs.'",
+        answered: false
+      },
+
+      // 5. The HR Survival Test
+      {
+        id: 21,
+        cat: 'survival',
+        question: "Coffee, sheer willpower, or the mute button: which one is primarily keeping your HR department operational today?",
+        tip: "Ask for a show of hands for each option!",
+        answered: false
+      },
+      {
+        id: 22,
+        cat: 'survival',
+        question: "If your job title had to describe what you *actually* spend 80% of your day doing, what would your LinkedIn say?",
+        tip: "'Chief Slack DM Diplomat' or 'Executive Fire Extinguisher'?",
+        answered: false
+      },
+      {
+        id: 23,
+        cat: 'survival',
+        question: "What is the fastest way an employee can make an HR professional mentally sigh before they even finish their sentence?",
+        tip: "The infamous phrase: 'Quick question, do you have two seconds?'",
+        answered: false
+      },
+      {
+        id: 24,
+        cat: 'survival',
+        question: "If AI replaces managers tomorrow, what is the first human habit the AI would crash trying to understand?",
+        tip: "Passive aggressive CCing? Replying-all to say 'Thanks'?",
+        answered: false
+      },
+      {
+        id: 25,
+        cat: 'survival',
+        question: "What is the golden rule of surviving the annual company holiday party without opening three new disciplinary cases on Monday?",
+        tip: "Leave at 8:30 PM sharp, or assign a designated sober chaperone?",
+        answered: false
+      }
+    ];
+
+    let questionsDeck = [...initialHRQuestions];
+    let currentActiveQuestion = questionsDeck[0];
+    let wheelMode = 'categories'; // 'categories' | 'questions'
+
+    /* =================================================================
+       3. WHEEL CANVAS & DECELERATION PHYSICS
+       ================================================================= */
+    const canvas = document.getElementById('wheelCanvas');
+    const ctx = canvas.getContext('2d');
+    let currentAngle = 0;
+    let isSpinning = false;
+
+    // Build wheel wedges based on current mode
+    function getWedges() {
+      if (wheelMode === 'categories') {
+        return Object.values(CATEGORIES).map(c => ({
+          label: c.title,
+          color: c.color,
+          data: c
+        }));
+      } else {
+        // Individual active questions mode
+        const activeQs = questionsDeck.filter(q => !q.answered);
+        const pool = activeQs.length > 0 ? activeQs : questionsDeck;
+        return pool.map(q => ({
+          label: `#${q.id} ${q.question.substring(0, 26)}...`,
+          color: CATEGORIES[q.cat].color,
+          data: q
+        }));
+      }
+    }
+
+    function drawWheel() {
+      const wedges = getWedges();
+      const numWedges = wedges.length;
+      const arc = (2 * Math.PI) / numWedges;
+      const radius = canvas.width / 2;
+
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+      ctx.save();
+      ctx.translate(radius, radius);
+      ctx.rotate(currentAngle);
+
+      for (let i = 0; i < numWedges; i++) {
+        const item = wedges[i];
+        const angle = i * arc;
+
+        // Draw Wedge Slice
+        ctx.beginPath();
+        ctx.fillStyle = item.color;
+        ctx.moveTo(0, 0);
+        ctx.arc(0, 0, radius - 8, angle, angle + arc);
+        ctx.lineTo(0, 0);
+        ctx.fill();
+
+        // Wedge Outline & Separator
+        ctx.strokeStyle = '#0f172a';
+        ctx.lineWidth = 4;
+        ctx.stroke();
+
+        // Label text inside wedge
+        ctx.save();
+        ctx.rotate(angle + arc / 2);
+        ctx.textAlign = 'right';
+        ctx.fillStyle = '#ffffff';
+        ctx.font = numWedges > 10 
+          ? "bold 10px 'Plus Jakarta Sans', sans-serif" 
+          : "bold 13px 'Plus Jakarta Sans', sans-serif";
+        ctx.shadowColor = 'rgba(0, 0, 0, 0.7)';
+        ctx.shadowBlur = 4;
+
+        // Truncate text nicely
+        let label = item.label;
+        if (label.length > 28) label = label.substring(0, 26) + '...';
+        ctx.fillText(label, radius - 26, 4);
+        ctx.restore();
+      }
+
+      ctx.restore();
+    }
+
+    function spinWheel() {
+      if (isSpinning) return;
+      isSpinning = true;
+      initAudio();
+      SoundFX.click();
+
+      // Spin physics calculation
+      const minRotations = 6;
+      const extraRandom = Math.random() * 4;
+      const totalRotationRads = (minRotations + extraRandom) * 2 * Math.PI + Math.random() * (2 * Math.PI);
+      const duration = 4500; // ms
+      const startTime = performance.now();
+      const initialAngle = currentAngle;
+      let lastPegIndex = -1;
+
+      function animate(time) {
+        const elapsed = time - startTime;
+        const progress = Math.min(elapsed / duration, 1);
+
+        // Quintic Ease-Out curve for dramatic slow-down at end
+        const ease = 1 - Math.pow(1 - progress, 4);
+        currentAngle = initialAngle + totalRotationRads * ease;
+
+        // Audio Peg Tick on crossing wedge boundary
+        const wedges = getWedges();
+        const arc = (2 * Math.PI) / wedges.length;
+        const currentWedgeIndex = Math.floor((currentAngle % (2 * Math.PI)) / arc);
+        if (currentWedgeIndex !== lastPegIndex) {
+          SoundFX.pegTick();
+          lastPegIndex = currentWedgeIndex;
+        }
+
+        drawWheel();
+
+        if (progress < 1) {
+          requestAnimationFrame(animate);
+        } else {
+          isSpinning = false;
+          resolveSpinResult();
+        }
+      }
+
+      requestAnimationFrame(animate);
+    }
+
+    function resolveSpinResult() {
+      SoundFX.fanfare();
+      triggerConfetti();
+
+      const wedges = getWedges();
+      const numWedges = wedges.length;
+      const arc = (2 * Math.PI) / numWedges;
+
+      // Pointer is fixed at the very top (3 * Math.PI / 2)
+      const normalized = (2 * Math.PI - (currentAngle % (2 * Math.PI))) % (2 * Math.PI);
+      const pointerAngle = (normalized + 3 * Math.PI / 2) % (2 * Math.PI);
+      const winningIndex = Math.floor(pointerAngle / arc) % numWedges;
+      const winningWedge = wedges[winningIndex];
+
+      let pickedQuestion;
+      if (wheelMode === 'categories') {
+        // Pick an un-answered question from this category first, else any in category
+        const catQuestions = questionsDeck.filter(q => q.cat === winningWedge.data.id);
+        const unAnswered = catQuestions.filter(q => !q.answered);
+        const pool = unAnswered.length > 0 ? unAnswered : catQuestions;
+        pickedQuestion = pool[Math.floor(Math.random() * pool.length)];
+      } else {
+        pickedQuestion = winningWedge.data;
+      }
+
+      displayQuestion(pickedQuestion);
+      openRevealModal(pickedQuestion);
+    }
+
+    function randomPromptInstant() {
+      SoundFX.click();
+      const activeQs = questionsDeck.filter(q => !q.answered);
+      const pool = activeQs.length > 0 ? activeQs : questionsDeck;
+      const picked = pool[Math.floor(Math.random() * pool.length)];
+      displayQuestion(picked);
+      showToast('Quick picked prompt loaded!');
+    }
+
+    function triggerConfetti() {
+      try {
+        confetti({
+          particleCount: 70,
+          spread: 80,
+          origin: { y: 0.65 },
+          colors: ['#a855f7', '#f59e0b', '#10b981', '#f43f5e', '#06b6d4']
+        });
+      } catch (e) {}
+    }
+
+    /* =================================================================
+       4. DISPLAY & SPOTLIGHT SPEAKING TIMER
+       ================================================================= */
+    function displayQuestion(q) {
+      currentActiveQuestion = q;
+      const catConfig = CATEGORIES[q.cat];
+
+      // Update Live Side Card
+      const badge = document.getElementById('liveCategoryBadge');
+      badge.className = `px-3 py-1 rounded-full text-xs font-black uppercase tracking-wider ${catConfig.badgeBg} ${catConfig.badgeText} ${catConfig.badgeBorder} border`;
+      badge.innerText = catConfig.title;
+
+      document.getElementById('liveQuestionNumber').innerText = `HR-PROMPT #${q.id}`;
+      document.getElementById('liveQuestionText').innerText = `"${q.question}"`;
+      document.getElementById('facilitatorTipText').innerText = q.tip;
+
+      // Update Mark Answered Button
+      updateMarkAnsweredBtnState();
+
+      // Reset Spotlight Timer
+      resetSpotlightTimer(60);
+    }
+
+    function openRevealModal(q) {
+      const catConfig = CATEGORIES[q.cat];
+      const modal = document.getElementById('revealModal');
+      const badge = document.getElementById('modalCategoryBadge');
+      
+      badge.innerText = catConfig.title;
+      badge.style.backgroundColor = catConfig.color;
+      document.getElementById('modalQuestionNumber').innerText = `#${q.id}`;
+      document.getElementById('modalQuestionText').innerText = `"${q.question}"`;
+      document.getElementById('modalTipText').innerText = q.tip;
+
+      modal.classList.remove('hidden');
+    }
+
+    function closeRevealModal() {
+      SoundFX.click();
+      document.getElementById('revealModal').classList.add('hidden');
+    }
+
+    /* 60s Spotlight Timer */
+    let spotlightSeconds = 60;
+    let spotlightMax = 60;
+    let spotlightInterval = null;
+
+    function startSpotlightTimer() {
+      SoundFX.click();
+      if (spotlightInterval) clearInterval(spotlightInterval);
+
+      spotlightInterval = setInterval(() => {
+        if (spotlightSeconds > 0) {
+          spotlightSeconds--;
+          updateSpotlightUI();
+          if (spotlightSeconds <= 5 && spotlightSeconds > 0) {
+            SoundFX.timerBeep();
+          }
+        } else {
+          clearInterval(spotlightInterval);
+          SoundFX.timerFinish();
+          triggerConfetti();
+          showToast('Time is up! Thank you for sharing.', 'fa-clock', 'text-amber-400');
+        }
+      }, 1000);
+    }
+
+    function pauseSpotlightTimer() {
+      SoundFX.click();
+      if (spotlightInterval) clearInterval(spotlightInterval);
+    }
+
+    function resetSpotlightTimer(seconds = 60) {
+      if (spotlightInterval) clearInterval(spotlightInterval);
+      spotlightMax = seconds;
+      spotlightSeconds = seconds;
+      updateSpotlightUI();
+    }
+
+    function updateSpotlightUI() {
+      document.getElementById('spotlightTimerDisplay').innerText = spotlightSeconds + 's';
+      const pct = (spotlightSeconds / spotlightMax) * 100;
+      const bar = document.getElementById('spotlightProgressBar');
+      bar.style.width = pct + '%';
+      
+      if (spotlightSeconds <= 10) {
+        bar.className = 'h-full bg-rose-500 animate-pulse transition-all duration-1000 ease-linear';
+      } else {
+        bar.className = 'h-full bg-cat-culture transition-all duration-1000 ease-linear';
+      }
+    }
+
+    function passHotSeat() {
+      SoundFX.click();
+      triggerConfetti();
+      showToast("Hot Seat Passed! The speaker picks the next HR colleague!", 'fa-fire', 'text-rose-400');
+      resetSpotlightTimer(60);
+      startSpotlightTimer();
+    }
+
+    /* =================================================================
+       5. QUESTIONS MANAGEMENT & DRAWER
+       ================================================================= */
+    function updateAnsweredCount() {
+      const answeredCount = questionsDeck.filter(q => q.answered).length;
+      document.getElementById('answeredCounter').innerText = `${answeredCount} / ${questionsDeck.length}`;
+      document.getElementById('activeWedgesCount').innerText = questionsDeck.length - answeredCount;
+      updateMarkAnsweredBtnState();
+      renderDrawerList();
+    }
+
+    function updateMarkAnsweredBtnState() {
+      const btn = document.getElementById('markAnsweredBtn');
+      if (currentActiveQuestion && currentActiveQuestion.answered) {
+        btn.innerHTML = `<i class="fa-solid fa-rotate-left"></i><span>Mark as Unanswered</span>`;
+        btn.className = "px-3 py-1.5 rounded-lg bg-emerald-900/60 border border-emerald-500/60 text-xs font-bold text-emerald-200 transition-all flex items-center gap-1.5";
+      } else {
+        btn.innerHTML = `<i class="fa-solid fa-check"></i><span>Mark as Answered</span>`;
+        btn.className = "px-3 py-1.5 rounded-lg bg-slate-800 hover:bg-emerald-950 border border-slate-700 hover:border-emerald-600 text-xs font-bold text-slate-300 hover:text-emerald-300 transition-all flex items-center gap-1.5";
+      }
+    }
+
+    function toggleCurrentQuestionAnswered() {
+      if (!currentActiveQuestion) return;
+      SoundFX.click();
+      currentActiveQuestion.answered = !currentActiveQuestion.answered;
+      updateAnsweredCount();
+      if (wheelMode === 'questions') {
+        drawWheel();
+      }
+    }
+
+    function setWheelMode(mode) {
+      wheelMode = mode;
+      SoundFX.click();
+      const catBtn = document.getElementById('modeCategoriesBtn');
+      const qBtn = document.getElementById('modeQuestionsBtn');
+      if (mode === 'categories') {
+        catBtn.className = "px-3 py-1.5 rounded-lg bg-brand-600 text-white transition-all shadow-sm";
+        qBtn.className = "px-3 py-1.5 rounded-lg text-slate-400 hover:text-white transition-all";
+      } else {
+        qBtn.className = "px-3 py-1.5 rounded-lg bg-brand-600 text-white transition-all shadow-sm";
+        catBtn.className = "px-3 py-1.5 rounded-lg text-slate-400 hover:text-white transition-all";
+      }
+      drawWheel();
+      showToast(`Wheel mode switched to: ${mode.toUpperCase()}`);
+    }
+
+    function toggleDrawer() {
+      SoundFX.click();
+      const drawer = document.getElementById('questionsDrawer');
+      const backdrop = document.getElementById('drawerBackdrop');
+      if (drawer.classList.contains('translate-x-full')) {
+        drawer.classList.remove('translate-x-full');
+        backdrop.classList.remove('hidden');
+        renderDrawerList();
+      } else {
+        drawer.classList.add('translate-x-full');
+        backdrop.classList.add('hidden');
+      }
+    }
+
+    function renderDrawerList() {
+      const container = document.getElementById('drawerListContainer');
+      container.innerHTML = '';
+
+      questionsDeck.forEach(q => {
+        const cat = CATEGORIES[q.cat];
+        const card = document.createElement('div');
+        card.className = `p-3 rounded-xl border transition-all text-xs flex flex-col gap-1.5 cursor-pointer ${
+          q.answered 
+            ? 'bg-slate-900/40 border-slate-800/80 opacity-60' 
+            : 'bg-slate-800/60 border-slate-700/80 hover:border-indigo-500/60'
+        }`;
+
+        card.onclick = (e) => {
+          if (!e.target.closest('.check-toggle')) {
+            displayQuestion(q);
+            toggleDrawer();
+          }
+        };
+
+        card.innerHTML = `
+          <div class="flex items-center justify-between">
+            <span class="px-2 py-0.5 rounded text-[10px] font-extrabold uppercase ${cat.badgeBg} ${cat.badgeText}">
+              ${cat.title}
+            </span>
+            <button class="check-toggle p-1 text-slate-400 hover:text-emerald-400" onclick="event.stopPropagation(); toggleSpecificQuestionAnswered(${q.id});">
+              <i class="${q.answered ? 'fa-solid fa-square-check text-emerald-400' : 'fa-regular fa-square'} text-sm"></i>
+            </button>
+          </div>
+          <p class="font-medium text-slate-200 ${q.answered ? 'line-through text-slate-500' : ''}">
+            #${q.id}. ${q.question}
+          </p>
+        `;
+        container.appendChild(card);
+      });
+    }
+
+    function toggleSpecificQuestionAnswered(id) {
+      SoundFX.click();
+      const target = questionsDeck.find(q => q.id === id);
+      if (target) {
+        target.answered = !target.answered;
+        updateAnsweredCount();
+        if (wheelMode === 'questions') drawWheel();
+      }
+    }
+
+    function resetAllAnswered() {
+      SoundFX.click();
+      questionsDeck.forEach(q => q.answered = false);
+      updateAnsweredCount();
+      if (wheelMode === 'questions') drawWheel();
+      showToast('All 25 questions reset to active status!');
+    }
+
+    function handleCustomQuestionAdd(e) {
+      e.preventDefault();
+      SoundFX.click();
+      const cat = document.getElementById('customCatSelect').value;
+      const input = document.getElementById('customQuestionInput');
+      const text = input.value.trim();
+
+      if (text) {
+        const newId = questionsDeck.length + 1;
+        questionsDeck.push({
+          id: newId,
+          cat: cat,
+          question: text,
+          tip: "Custom workplace question added by facilitator!",
+          answered: false
+        });
+        input.value = '';
+        updateAnsweredCount();
+        if (wheelMode === 'questions') drawWheel();
+        showToast(`Added custom question #${newId}!`);
+      }
+    }
+
+    /* =================================================================
+       6. UTILITIES (FULLSCREEN, TOAST)
+       ================================================================= */
+    function toggleFullscreen() {
+      SoundFX.click();
+      if (!document.fullscreenElement) {
+        document.documentElement.requestFullscreen().catch(() => {});
+        showToast('Entered Fullscreen Mode');
+      } else {
+        if (document.exitFullscreen) {
+          document.exitFullscreen();
+          showToast('Exited Fullscreen Mode');
+        }
+      }
+    }
+
+    function showToast(msg, icon = 'fa-circle-check', colorClass = 'text-cat-culture') {
+      const toast = document.getElementById('appToast');
+      const toastMsg = document.getElementById('toastMsg');
+      const toastIcon = document.getElementById('toastIcon');
+
+      toastMsg.innerText = msg;
+      toastIcon.className = `fa-solid ${icon} ${colorClass} text-base`;
+
+      toast.classList.remove('translate-y-20', 'opacity-0');
+      setTimeout(() => {
+        toast.classList.add('translate-y-20', 'opacity-0');
+      }, 2500);
+    }
+
+    /* =================================================================
+       7. INITIALIZATION
+       ================================================================= */
+    window.onload = function() {
+      drawWheel();
+      displayQuestion(questionsDeck[0]);
+      updateAnsweredCount();
+
+      window.addEventListener('resize', () => {
+        drawWheel();
+      });
+    };
+  </script>
+</body>
+</html>
